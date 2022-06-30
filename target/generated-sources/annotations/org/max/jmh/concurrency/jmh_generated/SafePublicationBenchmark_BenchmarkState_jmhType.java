@@ -1,4 +1,0 @@
-package org.max.jmh.concurrency.jmh_generated;
-public class SafePublicationBenchmark_BenchmarkState_jmhType extends SafePublicationBenchmark_BenchmarkState_jmhType_B3 {
-}
-
