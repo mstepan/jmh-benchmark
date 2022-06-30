@@ -24,14 +24,11 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
  * sysctl -a | grep hw.cachelinesize => hw.cachelinesize: 64
  *
  * Benchmark                                 Mode  Cnt   Score   Error  Units
- * FalseSharingBenchmark.falseSharing        avgt    5  13.422 ± 2.372  ns/op
- * FalseSharingBenchmark.falseSharing:read   avgt    5   3.092 ± 0.849  ns/op
- * FalseSharingBenchmark.falseSharing:write  avgt    5  23.751 ± 3.958  ns/op
+ * FalseSharingBenchmark.falseSharing:read   avgt    5   2.967 ± 0.740  ns/op
+ * FalseSharingBenchmark.falseSharing:write  avgt    5  21.899 ± 4.607  ns/op
  *
- * FalseSharingBenchmark.withPadding         avgt    5   9.121 ± 1.560  ns/op
- * FalseSharingBenchmark.withPadding:read    avgt    5   2.231 ± 0.414  ns/op
- * FalseSharingBenchmark.withPadding:write   avgt    5  16.011 ± 2.718  ns/op
- *
+ * FalseSharingBenchmark.withPadding:read    avgt    5   2.155 ± 0.345  ns/op
+ * FalseSharingBenchmark.withPadding:write   avgt    5  14.870 ± 1.999  ns/op
  */
 @Fork(1)
 @BenchmarkMode(Mode.AverageTime)
@@ -53,16 +50,24 @@ public class FalseSharingBenchmark {
         volatile int writeCount;
     }
 
-    @State(Scope.Group)
     public static class RegisterWithPadding {
         volatile int readCount;
+    }
+    public static class RegisterWithPadding2 extends RegisterWithPadding {
         // 64 bytes cache line
         int x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15, x16;
+    }
 
+    public static class RegisterWithPadding3 extends RegisterWithPadding2 {
         volatile int writeCount;
+    }
+
+    @State(Scope.Group)
+    public static class RegisterWithPadding4 extends RegisterWithPadding3 {
         // 64 bytes cache line
         int y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, y13, y14, y15, y16;
     }
+
 
     @Benchmark
     @Group("falseSharing")
@@ -78,13 +83,13 @@ public class FalseSharingBenchmark {
 
     @Benchmark
     @Group("withPadding")
-    public void read(RegisterWithPadding state, Blackhole bh) {
+    public void read(RegisterWithPadding4 state, Blackhole bh) {
         bh.consume(state.readCount);
     }
 
     @Benchmark
     @Group("withPadding")
-    public void write(RegisterWithPadding state, ThreadState threadState) {
+    public void write(RegisterWithPadding4 state, ThreadState threadState) {
         state.writeCount = threadState.randValue;
     }
 
