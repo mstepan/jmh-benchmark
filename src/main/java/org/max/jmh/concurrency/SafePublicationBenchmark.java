@@ -123,7 +123,7 @@ public class SafePublicationBenchmark {
      *
      * a) Via the command line:
      *    $ ./mvnw clean package
-     *    $ java -jar target/benchmarks.jar SafePublicationBenchmark
+     *    $ java -jar target/benchmarks.jar SafePublicationBenchmark -t 32
      */
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
