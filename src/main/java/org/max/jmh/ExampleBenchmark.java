@@ -39,7 +39,6 @@ public class ExampleBenchmark {
         final ThreadLocalRandom rand = ThreadLocalRandom.current();
         private int[] arr1 = generateRandomArray();
         private int[] arr2 = Arrays.copyOf(arr1, arr1.length);
-        ;
 
         private int[] generateRandomArray() {
 
