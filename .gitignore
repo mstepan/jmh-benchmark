@@ -12,3 +12,6 @@ dependency-reduced-pom.xml
 # JMH json files
 jmh-*.json
 
+# Python venv files
+.venv
+
