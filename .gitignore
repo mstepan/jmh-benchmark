@@ -1,7 +1,14 @@
+# IntelliJ files
 .idea/
 *.iml
+
+# Maven files
 target/
 dependency-reduced-pom.xml
+
+# MacOS files
 .DS_Store
-docker/.env
+
+# JMH json files
+jmh-*.json
 
