@@ -1,7 +1,7 @@
 # Java Microbenchmark Harness playground
 
 ## Pre-requisites (one time setup)
-1. Install `Java 23`
+1. Install `Java 23`. Version set using `.sdkmanrc` file using [sdkman](https://sdkman.io/usage/)
 2. Install `Python 3.12` (check `.python-version` file)
 3. Create python virtual environment `python -m venv .venv`
 4. Activate virtual environment `source .venv/Scripts/activate`
