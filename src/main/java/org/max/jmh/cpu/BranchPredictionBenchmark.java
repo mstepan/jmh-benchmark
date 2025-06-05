@@ -1,4 +1,4 @@
-package org.max.jmh;
+package org.max.jmh.cpu;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -19,31 +19,30 @@ import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
-/**
- * More detailed JMH examples can be found here:
- * https://github.com/openjdk/jmh/tree/master/jmh-samples/src/main/java/org/openjdk/jmh/samples
- */
+/*
+Measure branch mis-prediction effect on performance.
+
+Benchmark                              Mode  Cnt        Score       Error  Units
+BranchPredictionBenchmark.randomArray  avgt    5  3165683.886 � 58231.982  ns/op
+BranchPredictionBenchmark.sortedArray  avgt    5   387693.393 �  7344.369  ns/op
+
+*/
 @Fork(1)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 5, time = 1000, timeUnit = TimeUnit.MILLISECONDS)
 @Measurement(iterations = 5, time = 1000, timeUnit = TimeUnit.MILLISECONDS)
-public class ExampleBenchmark {
-
-    @State(Scope.Benchmark)
-    public static class BenchmarkState {
-        final double PI = Math.PI;
-    }
+public class BranchPredictionBenchmark {
 
     @State(Scope.Thread)
     public static class ThreadState {
-        private final int[] arr1 = generateRandomArray();
-        private final int[] arr2 = Arrays.copyOf(arr1, arr1.length);
+        private final int[] randomArray = generateRandomArray();
+        private final int[] sortedArray = copyAndSort(randomArray);
 
         private int[] generateRandomArray() {
-            final ThreadLocalRandom rand = ThreadLocalRandom.current();
+            ThreadLocalRandom rand = ThreadLocalRandom.current();
 
-            int[] arr = new int[10_000];
+            int[] arr = new int[1_000_000];
 
             for (int i = 0; i < arr.length; ++i) {
                 arr[i] = rand.nextInt();
@@ -51,27 +50,44 @@ public class ExampleBenchmark {
 
             return arr;
         }
+
+        private int[] copyAndSort(int[] arr) {
+            int[] res = Arrays.copyOf(arr, arr.length);
+            Arrays.sort(res);
+            return res;
+        }
     }
 
     @Benchmark
-    public void classicForLoop(
-            BenchmarkState benchmarkState, ThreadState threadState, Blackhole bh) {
-        int sum = 0;
-        for (int i = 0; i < threadState.arr1.length; ++i) {
-            sum += (int) (threadState.arr1[i] * benchmarkState.PI);
+    public void randomArray(ThreadState threadState, Blackhole bh) {
+        int totalSum = 0;
+        int sumBelow128 = 0;
+
+        for (int i = 0; i < threadState.randomArray.length; ++i) {
+            if (threadState.randomArray[i] < 128) {
+                sumBelow128 += threadState.randomArray[i];
+            }
+            totalSum += threadState.randomArray[i];
         }
 
-        bh.consume(sum);
+        bh.consume(totalSum);
+        bh.consume(sumBelow128);
     }
 
     @Benchmark
-    public void foreach(BenchmarkState benchmarkState, ThreadState threadState, Blackhole bh) {
-        int sum = 0;
-        for (int val : threadState.arr2) {
-            sum += (int) (val * benchmarkState.PI);
+    public void sortedArray(ThreadState threadState, Blackhole bh) {
+        int totalSum = 0;
+        int sumBelow128 = 0;
+
+        for (int i = 0; i < threadState.sortedArray.length; ++i) {
+            if (threadState.sortedArray[i] < 128) {
+                sumBelow128 += threadState.sortedArray[i];
+            }
+            totalSum += threadState.sortedArray[i];
         }
 
-        bh.consume(sum);
+        bh.consume(totalSum);
+        bh.consume(sumBelow128);
     }
 
     /*
@@ -79,14 +95,15 @@ public class ExampleBenchmark {
      *
      * To run benchmark and see the results do the following:
      *    $ ./mvnw clean package
-     *    $ java -jar target/benchmarks.jar ExampleBenchmark
+     *    $ java -jar target/benchmarks.jar BranchPredictionBenchmark
      */
 
     public static void main(String[] args) throws RunnerException {
         Options opt =
                 new OptionsBuilder()
-                        .include(ExampleBenchmark.class.getSimpleName())
+                        .include(BranchPredictionBenchmark.class.getSimpleName())
                         //            .threads(Runtime.getRuntime().availableProcessors())
+                        //            .jvmArgs("-ea")
                         .jvmArgs("-ea", "-Xms2G", "-Xmx2G")
                         .build();
 
