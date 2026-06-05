@@ -80,6 +80,12 @@ public class ExampleBenchmark {
      * To run benchmark and see the results do the following:
      *    $ ./mvnw clean package
      *    $ java -jar target/benchmarks.jar ExampleBenchmark
+     *
+     * You can also pass any additional JVM arguments as needed, like disable JIT in below command:
+     *
+     *    $ java -jar target/benchmarks.jar ExampleBenchmark -jvmArgs -Xint
+     *
+     * ==============================================================================================
      */
 
     public static void main(String[] args) throws RunnerException {
