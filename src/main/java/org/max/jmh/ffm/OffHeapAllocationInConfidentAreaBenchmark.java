@@ -19,6 +19,11 @@ import java.lang.foreign.ValueLayout;
 import java.util.concurrent.TimeUnit;
 
 /*
+
+Benchmark off heap allocation inside Confined area.
+
+https://inside.java/2026/10/23/confined-pools/
+
 ==============================================================================================
 java 25
 ==============================================================================================

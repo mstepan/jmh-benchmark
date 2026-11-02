@@ -1,7 +1,5 @@
 package org.max.jmh.concurrency;
 
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -18,17 +16,19 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+
 /**
  * False sharing benchmark.
  *
- * sysctl -a | grep hw.cachelinesize => hw.cachelinesize: 64
+ * <p>sysctl -a | grep hw.cachelinesize => hw.cachelinesize: 64
  *
- * Benchmark                                 Mode  Cnt   Score   Error  Units
- * FalseSharingBenchmark.falseSharing:read   avgt    5   2.967 ± 0.740  ns/op
- * FalseSharingBenchmark.falseSharing:write  avgt    5  21.899 ± 4.607  ns/op
+ * <p>Benchmark Mode Cnt Score Error Units FalseSharingBenchmark.falseSharing:read avgt 5 2.967 ±
+ * 0.740 ns/op FalseSharingBenchmark.falseSharing:write avgt 5 21.899 ± 4.607 ns/op
  *
- * FalseSharingBenchmark.withPadding:read    avgt    5   2.155 ± 0.345  ns/op
- * FalseSharingBenchmark.withPadding:write   avgt    5  14.870 ± 1.999  ns/op
+ * <p>FalseSharingBenchmark.withPadding:read avgt 5 2.155 ± 0.345 ns/op
+ * FalseSharingBenchmark.withPadding:write avgt 5 14.870 ± 1.999 ns/op
  */
 @Fork(1)
 @BenchmarkMode(Mode.AverageTime)
@@ -53,6 +53,7 @@ public class FalseSharingBenchmark {
     public static class RegisterWithPadding {
         volatile int readCount;
     }
+
     public static class RegisterWithPadding2 extends RegisterWithPadding {
         // 64 bytes cache line
         int x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15, x16;
@@ -67,7 +68,6 @@ public class FalseSharingBenchmark {
         // 64 bytes cache line
         int y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, y13, y14, y15, y16;
     }
-
 
     @Benchmark
     @Group("falseSharing")
@@ -106,11 +106,9 @@ public class FalseSharingBenchmark {
      */
 
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-            .include(FalseSharingBenchmark.class.getSimpleName())
-            .build();
+        Options opt =
+                new OptionsBuilder().include(FalseSharingBenchmark.class.getSimpleName()).build();
 
         new Runner(opt).run();
     }
-
 }

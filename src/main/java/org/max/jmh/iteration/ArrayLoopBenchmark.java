@@ -1,8 +1,5 @@
 package org.max.jmh.iteration;
 
-import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -20,11 +17,14 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+
 /**
- * Benchmark                            Mode  Cnt     Score     Error  Units
- * ArrayLoopBenchmark.classicForLoop    avgt   10  2671.164 ± 172.315  ns/op
- * ArrayLoopBenchmark.foreach           avgt   10  2540.569 ± 177.170  ns/op
- * ArrayLoopBenchmark.optimizedForLoop  avgt   10  2461.539 ±  26.587  ns/op
+ * Benchmark Mode Cnt Score Error Units ArrayLoopBenchmark.classicForLoop avgt 10 2671.164 ± 172.315
+ * ns/op ArrayLoopBenchmark.foreach avgt 10 2540.569 ± 177.170 ns/op
+ * ArrayLoopBenchmark.optimizedForLoop avgt 10 2461.539 ± 26.587 ns/op
  */
 @State(Scope.Thread)
 @BenchmarkMode(Mode.AverageTime)
@@ -66,7 +66,6 @@ public class ArrayLoopBenchmark {
 
         return arr;
     }
-
 
     @Benchmark
     public void classicForLoop(Blackhole bh) {
@@ -111,13 +110,13 @@ public class ArrayLoopBenchmark {
      */
 
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-            .include(ArrayLoopBenchmark.class.getSimpleName())
-//            .threads(Runtime.getRuntime().availableProcessors())
-//            .jvmArgs("-ea")
-            .build();
+        Options opt =
+                new OptionsBuilder()
+                        .include(ArrayLoopBenchmark.class.getSimpleName())
+                        //            .threads(Runtime.getRuntime().availableProcessors())
+                        //            .jvmArgs("-ea")
+                        .build();
 
         new Runner(opt).run();
     }
-
 }

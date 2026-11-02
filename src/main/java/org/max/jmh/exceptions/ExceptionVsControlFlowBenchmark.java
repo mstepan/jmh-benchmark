@@ -1,9 +1,5 @@
 package org.max.jmh.exceptions;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -17,13 +13,18 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Measure flow pass using checked exception, runtime exception and normal control flow.
  *
- * Benchmark                                         Mode  Cnt        Score        Error  Units
- * ExceptionVsControlFlowBenchmark.checkedException  avgt    5  3816731.012 ± 152898.567  ns/op
- * ExceptionVsControlFlowBenchmark.controlFlow       avgt    5    21106.774 ±   4106.185  ns/op
- * ExceptionVsControlFlowBenchmark.runtimeException  avgt    5   298844.739 ±   8389.289  ns/op
+ * <p>Benchmark Mode Cnt Score Error Units ExceptionVsControlFlowBenchmark.checkedException avgt 5
+ * 3816731.012 ± 152898.567 ns/op ExceptionVsControlFlowBenchmark.controlFlow avgt 5 21106.774 ±
+ * 4106.185 ns/op ExceptionVsControlFlowBenchmark.runtimeException avgt 5 298844.739 ± 8389.289
+ * ns/op
  */
 @Fork(1)
 @BenchmarkMode(Mode.AverageTime)
@@ -42,12 +43,10 @@ public class ExceptionVsControlFlowBenchmark {
                 if ((i % errorIt) == 0) {
                     throw new IOException("Some exception");
                 }
-            }
-            catch (IOException ioEx) {
+            } catch (IOException ioEx) {
                 data.add(i);
             }
         }
-
 
         bh.consume(data);
     }
@@ -64,17 +63,14 @@ public class ExceptionVsControlFlowBenchmark {
             try {
                 if ((i % errorIt) == 0) {
                     obj = null;
-                }
-                else {
+                } else {
                     obj = dump;
                 }
                 obj.toString();
-            }
-            catch (NullPointerException npEx) {
+            } catch (NullPointerException npEx) {
                 data.add(i);
             }
         }
-
 
         bh.consume(data);
     }
@@ -89,8 +85,7 @@ public class ExceptionVsControlFlowBenchmark {
                 if ((i % errorIt) == 0) {
                     data.add(i);
                 }
-            }
-            catch (IllegalArgumentException ioEx) {
+            } catch (IllegalArgumentException ioEx) {
                 data.add(i);
             }
         }
@@ -111,13 +106,13 @@ public class ExceptionVsControlFlowBenchmark {
      */
 
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-            .include(ExceptionVsControlFlowBenchmark.class.getSimpleName())
-//            .threads(Runtime.getRuntime().availableProcessors())
-//            .jvmArgs("-ea")
-            .build();
+        Options opt =
+                new OptionsBuilder()
+                        .include(ExceptionVsControlFlowBenchmark.class.getSimpleName())
+                        //            .threads(Runtime.getRuntime().availableProcessors())
+                        //            .jvmArgs("-ea")
+                        .build();
 
         new Runner(opt).run();
     }
-
 }

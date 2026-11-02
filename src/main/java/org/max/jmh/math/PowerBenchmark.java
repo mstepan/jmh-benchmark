@@ -1,7 +1,5 @@
 package org.max.jmh.math;
 
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -17,14 +15,15 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+
 /**
  * MMicro-benchmark class for POW function.
  *
- * Benchmark                            Mode  Cnt   Score    Error  Units
- * PowerBenchmark.powerQuickIterative   avgt   20   8.724 ±  0.469  ns/op
- * PowerBenchmark.powerQuickRec         avgt   20   9.220 ±  0.585  ns/op
- * PowerBenchmark.powerSlow             avgt   20  30.280 ± 18.679  ns/op
- * PowerBenchmark.powerStandardLibrary  avgt   20  26.755 ±  2.610  ns/op
+ * <p>Benchmark Mode Cnt Score Error Units PowerBenchmark.powerQuickIterative avgt 20 8.724 ± 0.469
+ * ns/op PowerBenchmark.powerQuickRec avgt 20 9.220 ± 0.585 ns/op PowerBenchmark.powerSlow avgt 20
+ * 30.280 ± 18.679 ns/op PowerBenchmark.powerStandardLibrary avgt 20 26.755 ± 2.610 ns/op
  */
 @Fork(2)
 @BenchmarkMode(Mode.AverageTime)
@@ -134,13 +133,13 @@ public class PowerBenchmark {
      */
 
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-            .include(PowerBenchmark.class.getSimpleName())
-//            .threads(Runtime.getRuntime().availableProcessors())
-//            .jvmArgs("-ea")
-            .build();
+        Options opt =
+                new OptionsBuilder()
+                        .include(PowerBenchmark.class.getSimpleName())
+                        //            .threads(Runtime.getRuntime().availableProcessors())
+                        //            .jvmArgs("-ea")
+                        .build();
 
         new Runner(opt).run();
     }
-
 }

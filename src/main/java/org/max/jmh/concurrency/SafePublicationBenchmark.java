@@ -1,8 +1,5 @@
 package org.max.jmh.concurrency;
 
-import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -18,11 +15,13 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 /**
- * Benchmark                                   Mode  Cnt   Score   Error  Units
- * SafePublicationBenchmark.fullySynchronized  avgt    5  40.300 ± 4.419  ns/op
- * SafePublicationBenchmark.immutableObject    avgt    5  14.853 ± 1.432  ns/op
+ * Benchmark Mode Cnt Score Error Units SafePublicationBenchmark.fullySynchronized avgt 5 40.300 ±
+ * 4.419 ns/op SafePublicationBenchmark.immutableObject avgt 5 14.853 ± 1.432 ns/op
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -42,7 +41,6 @@ public class SafePublicationBenchmark {
         final ThreadLocalRandom rand = ThreadLocalRandom.current();
     }
 
-
     @Benchmark
     public void immutableObject(BenchmarkState state, ThreadState threadState, Blackhole bh) {
         bh.consume(state.immutableRes.getResult());
@@ -59,13 +57,10 @@ public class SafePublicationBenchmark {
 
     static final class SynchronizedRes {
 
-        /**
-         * Guarded by this
-         */
+        /** Guarded by this */
         private int value;
-        /**
-         * Guarded by this
-         */
+
+        /** Guarded by this */
         private int[] factors = new int[] {0};
 
         public synchronized void setResult(int value, int[] factors) {
@@ -76,10 +71,7 @@ public class SafePublicationBenchmark {
         public synchronized ValueAndFactors getResult() {
             return new ValueAndFactors(value, factors);
         }
-
-
     }
-
 
     // Fully immutable object
     static final class ImmutableRes {
@@ -92,7 +84,6 @@ public class SafePublicationBenchmark {
         public ValueAndFactors getResult() {
             return result;
         }
-
     }
 
     static final class ValueAndFactors {
@@ -126,13 +117,13 @@ public class SafePublicationBenchmark {
      *    $ java -jar target/benchmarks.jar SafePublicationBenchmark -t 32
      */
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-            .include(SafePublicationBenchmark.class.getSimpleName())
-            .threads(Runtime.getRuntime().availableProcessors())
-//            .jvmArgs("-ea")
-            .build();
+        Options opt =
+                new OptionsBuilder()
+                        .include(SafePublicationBenchmark.class.getSimpleName())
+                        .threads(Runtime.getRuntime().availableProcessors())
+                        //            .jvmArgs("-ea")
+                        .build();
 
         new Runner(opt).run();
     }
-
 }

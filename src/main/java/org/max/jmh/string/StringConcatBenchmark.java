@@ -1,7 +1,5 @@
 package org.max.jmh.string;
 
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -17,11 +15,13 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 /**
- * Benchmark                                                     Mode  Cnt    Score    Error  Units
- * StringConcatBenchmark.stringBuilderConcat                     avgt    5  107.174 ± 11.181  ns/op
- * StringConcatBenchmark.stringBuilderWithInitialCapacityConcat  avgt    5   76.207 ±  7.390  ns/op
- * StringConcatBenchmark.stringConcat                            avgt    5   49.878 ±  6.855  ns/op
+ * Benchmark Mode Cnt Score Error Units StringConcatBenchmark.stringBuilderConcat avgt 5 107.174 ±
+ * 11.181 ns/op StringConcatBenchmark.stringBuilderWithInitialCapacityConcat avgt 5 76.207 ± 7.390
+ * ns/op StringConcatBenchmark.stringConcat avgt 5 49.878 ± 6.855 ns/op
  */
 @Fork(1)
 @BenchmarkMode(Mode.AverageTime)
@@ -51,10 +51,13 @@ public class StringConcatBenchmark {
     public void stringBuilderConcat(BenchmarkState state, Blackhole bh) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("hello").
-            append(state.first).append(", ").
-            append(state.second).append(", ").
-            append(state.third).append("!!!");
+        buf.append("hello")
+                .append(state.first)
+                .append(", ")
+                .append(state.second)
+                .append(", ")
+                .append(state.third)
+                .append("!!!");
 
         bh.consume(buf.toString());
     }
@@ -63,10 +66,13 @@ public class StringConcatBenchmark {
     public void stringBuilderWithInitialCapacityConcat(BenchmarkState state, Blackhole bh) {
         StringBuilder buf = new StringBuilder(64);
 
-        buf.append("hello").
-            append(state.first).append(", ").
-            append(state.second).append(", ").
-            append(state.third).append("!!!");
+        buf.append("hello")
+                .append(state.first)
+                .append(", ")
+                .append(state.second)
+                .append(", ")
+                .append(state.third)
+                .append("!!!");
 
         bh.consume(buf.toString());
     }
@@ -84,13 +90,13 @@ public class StringConcatBenchmark {
      */
 
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-            .include(StringConcatBenchmark.class.getSimpleName())
-//            .threads(Runtime.getRuntime().availableProcessors())
-//            .jvmArgs("-ea")
-            .build();
+        Options opt =
+                new OptionsBuilder()
+                        .include(StringConcatBenchmark.class.getSimpleName())
+                        //            .threads(Runtime.getRuntime().availableProcessors())
+                        //            .jvmArgs("-ea")
+                        .build();
 
         new Runner(opt).run();
     }
-
 }

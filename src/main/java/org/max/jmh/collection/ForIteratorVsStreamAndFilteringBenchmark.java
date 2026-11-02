@@ -1,11 +1,5 @@
 package org.max.jmh.collection;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -21,14 +15,20 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+
 /**
+ * Benchmark for loop iteration with if-else as filtering VS real stream with filter predicate
+ * operations.
  *
- * Benchmark for loop iteration with if-else as filtering VS real stream with filter predicate operations.
- *
- * Benchmark                                                     Mode  Cnt    Score    Error  Units
- * ForIteratorVsStreamAndFilteringBenchmark.classicForLoop       avgt    5  103.620 ± 11.563  ns/op
- * ForIteratorVsStreamAndFilteringBenchmark.streamWithFiltering  avgt    5  129.280 ± 11.511  ns/op
- *
+ * <p>Benchmark Mode Cnt Score Error Units ForIteratorVsStreamAndFilteringBenchmark.classicForLoop
+ * avgt 5 103.620 ± 11.563 ns/op ForIteratorVsStreamAndFilteringBenchmark.streamWithFiltering avgt 5
+ * 129.280 ± 11.511 ns/op
  */
 @Fork(1)
 @BenchmarkMode(Mode.AverageTime)
@@ -36,7 +36,6 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 @Warmup(iterations = 5, time = 1000, timeUnit = TimeUnit.MILLISECONDS)
 @Measurement(iterations = 5, time = 1000, timeUnit = TimeUnit.MILLISECONDS)
 public class ForIteratorVsStreamAndFilteringBenchmark {
-
 
     @State(Scope.Benchmark)
     public static class BenchmarkState {
@@ -97,9 +96,9 @@ public class ForIteratorVsStreamAndFilteringBenchmark {
         final Map<String, String> curMap = threadState.map2;
         final Set<String> whitelist = threadState.whitelist;
 
-        curMap.entrySet().stream().
-            filter(entry -> whitelist.contains(entry.getKey())).
-            forEach(bh::consume);
+        curMap.entrySet().stream()
+                .filter(entry -> whitelist.contains(entry.getKey()))
+                .forEach(bh::consume);
     }
 
     /*
@@ -115,13 +114,13 @@ public class ForIteratorVsStreamAndFilteringBenchmark {
      */
 
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-            .include(ForIteratorVsStreamAndFilteringBenchmark.class.getSimpleName())
-//            .threads(Runtime.getRuntime().availableProcessors())
-//            .jvmArgs("-ea")
-            .build();
+        Options opt =
+                new OptionsBuilder()
+                        .include(ForIteratorVsStreamAndFilteringBenchmark.class.getSimpleName())
+                        //            .threads(Runtime.getRuntime().availableProcessors())
+                        //            .jvmArgs("-ea")
+                        .build();
 
         new Runner(opt).run();
     }
-
 }

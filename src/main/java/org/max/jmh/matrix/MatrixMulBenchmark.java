@@ -20,25 +20,23 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Benchmark matrix multiplication using row-wise vs column-wise traversal.
- * <p>
- * More details can be found at section '6.2 Cache Access' from publication
+ *
+ * <p>More details can be found at section '6.2 Cache Access' from publication
  * https://people.freebsd.org/~lstewart/articles/cpumemory.pdf
  *
  * <p>
- * <p>
- * Size = 500...1000
- * <p>
- * Benchmark                         Mode  Cnt          Score           Error  Units
- * MatrixMulBenchmark.mulClassic     avgt    5  618797987.000 ± 138543613.688  ns/op
- * MatrixMulBenchmark.mulOptimized   avgt    5  188814047.667 ±   7094103.201  ns/op
- * MatrixMulBenchmark.mulTransposed  avgt    5  228318833.800 ±  12346777.314  ns/op
- * <p>
- * Size = 1000...2000
- * <p>
- * Benchmark                         Mode  Cnt            Score            Error  Units
- * MatrixMulBenchmark.mulClassic     avgt    5  11204080605.800 ±  781113076.684  ns/op
- * MatrixMulBenchmark.mulOptimized   avgt    5   3800444510.800 ± 1974161600.830  ns/op
- * MatrixMulBenchmark.mulTransposed  avgt    5   3957493544.800 ±  227665138.201  ns/op
+ *
+ * <p>Size = 500...1000
+ *
+ * <p>Benchmark Mode Cnt Score Error Units MatrixMulBenchmark.mulClassic avgt 5 618797987.000 ±
+ * 138543613.688 ns/op MatrixMulBenchmark.mulOptimized avgt 5 188814047.667 ± 7094103.201 ns/op
+ * MatrixMulBenchmark.mulTransposed avgt 5 228318833.800 ± 12346777.314 ns/op
+ *
+ * <p>Size = 1000...2000
+ *
+ * <p>Benchmark Mode Cnt Score Error Units MatrixMulBenchmark.mulClassic avgt 5 11204080605.800 ±
+ * 781113076.684 ns/op MatrixMulBenchmark.mulOptimized avgt 5 3800444510.800 ± 1974161600.830 ns/op
+ * MatrixMulBenchmark.mulTransposed avgt 5 3957493544.800 ± 227665138.201 ns/op
  */
 @Fork(1)
 @BenchmarkMode(Mode.AverageTime)
@@ -87,8 +85,8 @@ public class MatrixMulBenchmark {
     }
 
     /**
-     * Classic marix multiplication algorithm. 'm1' traversed in row-wise order, meanwhile
-     * 'm2' traversed in column-wise order.
+     * Classic marix multiplication algorithm. 'm1' traversed in row-wise order, meanwhile 'm2'
+     * traversed in column-wise order.
      */
     private static double[][] mulClassic(double[][] m1, double[][] m2) {
 
@@ -108,7 +106,6 @@ public class MatrixMulBenchmark {
                 for (int k = 0; k < m1Cols; ++k) {
                     res[row][col] += (m1[row][k] * m2[k][col]);
                 }
-
             }
         }
 
@@ -122,9 +119,9 @@ public class MatrixMulBenchmark {
     }
 
     /**
-     * We can travers both 'm1' and 'm2' in row-wise order, b/c multiplication result doesn't
-     * depend on order of sums. So we traverse both 'm1' and 'm2' in row-wise order and store
-     * results to 'res' matrix in row fashion too.
+     * We can travers both 'm1' and 'm2' in row-wise order, b/c multiplication result doesn't depend
+     * on order of sums. So we traverse both 'm1' and 'm2' in row-wise order and store results to
+     * 'res' matrix in row fashion too.
      */
     private static double[][] mulOptimized(double[][] m1, double[][] m2) {
 
@@ -144,7 +141,6 @@ public class MatrixMulBenchmark {
                 for (int k = 0; k < m2Cols; ++k) {
                     res[i][k] += (m1[i][j] * m2[j][k]);
                 }
-
             }
         }
 
@@ -158,8 +154,9 @@ public class MatrixMulBenchmark {
     }
 
     /**
-     * This algorithm is similar to 'mulOptimized' but explicitly transpose 'm2' before multiplication.
-     * So we have slightly increased space complexity, but both 'm1' and 'm2' are also traversed in row-wise fashion.
+     * This algorithm is similar to 'mulOptimized' but explicitly transpose 'm2' before
+     * multiplication. So we have slightly increased space complexity, but both 'm1' and 'm2' are
+     * also traversed in row-wise fashion.
      */
     private static double[][] mulTransposed(double[][] m1, double[][] m2) {
 
@@ -184,9 +181,7 @@ public class MatrixMulBenchmark {
         return res;
     }
 
-    /**
-     * Transpose matrix. Just change rows with cols.
-     */
+    /** Transpose matrix. Just change rows with cols. */
     private static double[][] transpose(double[][] m) {
 
         int rows = m.length;
@@ -205,48 +200,48 @@ public class MatrixMulBenchmark {
 
     // ============================== DEBUG section ====================================
 
-//    public static void main(String[] args) {
-//
-//        ThreadLocalRandom rand = ThreadLocalRandom.current();
-//
-//        int m1Rows = 1 + rand.nextInt(10);
-//        int sameDim = 1 + rand.nextInt(10);
-//        int m2Cols = 1 + rand.nextInt(10);
-//
-////            final double[][] m1 = {
-////                    {1, 2},
-////                    {3, 4}
-////            };
-//
-//        final double[][] m1 = BenchmarkState.generateRandomMatrix(m1Rows, sameDim);
-//
-////            final double[][] m2 = {
-////                    {4,5,6},
-////                    {7,8,9}
-////            };
-//
-//        final double[][] m2 = BenchmarkState.generateRandomMatrix(sameDim, m2Cols);
-//
-//        printMatrix(mulClassic(m1, m2));
-//        printMatrix(mulOptimized(m1, m2));
-//        printMatrix(mulTransposed(m1, m2));
-//    }
-//
-//    private static void printMatrix(double[][] res) {
-//        StringBuilder buf = new StringBuilder();
-//        for (int row = 0; row < res.length; ++row) {
-//            for (int col = 0; col < res[0].length; ++col) {
-//                if (col != 0) {
-//                    buf.append(" ");
-//                }
-//                buf.append(res[row][col]);
-//            }
-//
-//            buf.append(System.lineSeparator());
-//        }
-//
-//        System.out.println(buf);
-//    }
+    //    public static void main(String[] args) {
+    //
+    //        ThreadLocalRandom rand = ThreadLocalRandom.current();
+    //
+    //        int m1Rows = 1 + rand.nextInt(10);
+    //        int sameDim = 1 + rand.nextInt(10);
+    //        int m2Cols = 1 + rand.nextInt(10);
+    //
+    ////            final double[][] m1 = {
+    ////                    {1, 2},
+    ////                    {3, 4}
+    ////            };
+    //
+    //        final double[][] m1 = BenchmarkState.generateRandomMatrix(m1Rows, sameDim);
+    //
+    ////            final double[][] m2 = {
+    ////                    {4,5,6},
+    ////                    {7,8,9}
+    ////            };
+    //
+    //        final double[][] m2 = BenchmarkState.generateRandomMatrix(sameDim, m2Cols);
+    //
+    //        printMatrix(mulClassic(m1, m2));
+    //        printMatrix(mulOptimized(m1, m2));
+    //        printMatrix(mulTransposed(m1, m2));
+    //    }
+    //
+    //    private static void printMatrix(double[][] res) {
+    //        StringBuilder buf = new StringBuilder();
+    //        for (int row = 0; row < res.length; ++row) {
+    //            for (int col = 0; col < res[0].length; ++col) {
+    //                if (col != 0) {
+    //                    buf.append(" ");
+    //                }
+    //                buf.append(res[row][col]);
+    //            }
+    //
+    //            buf.append(System.lineSeparator());
+    //        }
+    //
+    //        System.out.println(buf);
+    //    }
 
     /*
      * ============================== HOW TO RUN THIS TEST: ====================================
@@ -261,13 +256,13 @@ public class MatrixMulBenchmark {
      */
 
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-                .include(MatrixMulBenchmark.class.getSimpleName())
-//            .threads(Runtime.getRuntime().availableProcessors())
-//            .jvmArgs("-ea")
-                .build();
+        Options opt =
+                new OptionsBuilder()
+                        .include(MatrixMulBenchmark.class.getSimpleName())
+                        //            .threads(Runtime.getRuntime().availableProcessors())
+                        //            .jvmArgs("-ea")
+                        .build();
 
         new Runner(opt).run();
     }
-
 }

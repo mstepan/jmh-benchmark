@@ -12,6 +12,14 @@
    check https://nodejs.org/en/about/previous-releases)
 7. Install node http server `npm install http-server -g`
 
+## Java formatting
+
+Spotless uses google-java-format with Android (AOSP) style. Maven automatically formats Java
+sources during the `validate` phase, including when running `./mvnw clean package`.
+
+- Format manually: `./mvnw spotless:apply`
+- Check formatting without changing files: `./mvnw spotless:check`
+
 ## Compare results between benchmarks
 
 We will use `org.max.jmh.ExampleBenchmark` as our main benchmark class:

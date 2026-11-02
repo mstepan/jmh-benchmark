@@ -1,9 +1,5 @@
 package org.max.jmh.collection;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -19,12 +15,17 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Normal collections vs fully synchronized collections benchmark.
  *
- * Benchmark                                            Mode  Cnt   Score   Error  Units
- * SynchronizedVsNormalCollectionsBenchmark.normalList  avgt    5  11.047 ± 0.474  ns/op
- * SynchronizedVsNormalCollectionsBenchmark.synchList   avgt    5  52.717 ± 6.022  ns/op
+ * <p>Benchmark Mode Cnt Score Error Units SynchronizedVsNormalCollectionsBenchmark.normalList avgt
+ * 5 11.047 ± 0.474 ns/op SynchronizedVsNormalCollectionsBenchmark.synchList avgt 5 52.717 ± 6.022
+ * ns/op
  */
 @Fork(1)
 @BenchmarkMode(Mode.AverageTime)
@@ -66,13 +67,13 @@ public class SynchronizedVsNormalCollectionsBenchmark {
      */
 
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-            .include(SynchronizedVsNormalCollectionsBenchmark.class.getSimpleName())
-//            .threads(Runtime.getRuntime().availableProcessors())
-//            .jvmArgs("-ea")
-            .build();
+        Options opt =
+                new OptionsBuilder()
+                        .include(SynchronizedVsNormalCollectionsBenchmark.class.getSimpleName())
+                        //            .threads(Runtime.getRuntime().availableProcessors())
+                        //            .jvmArgs("-ea")
+                        .build();
 
         new Runner(opt).run();
     }
-
 }
